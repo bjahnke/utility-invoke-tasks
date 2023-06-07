@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='utility-invoke-tasks',
     version='0.0.2',
-    packages=['src/util_invoke_tasks'],
+    packages=[''],
     url='',
     license='MIT',
     author='bjahnke',
