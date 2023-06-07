@@ -3,8 +3,6 @@ import subprocess
 import yaml
 import os
 
-image_name = 'price-updater'
-
 
 def get_env_var(env_var):
     """
@@ -49,7 +47,7 @@ def dockerbuild(c):
     """
     print("Building docker image...")
     # print current working directory
-    subprocess.run(["docker", "build", "-t", image_name, "-f", "docker/Dockerfile", "."])
+    subprocess.run(["docker", "build", "-t", get_env_var('IMAGE_NAME'), "-f", "docker/Dockerfile", "."])
 
 
 @task
@@ -58,9 +56,9 @@ def dockertag(c):
     tag the docker image
     :return:
     """
-    docker_tag = f"{get_env_var('DOCKER_USERNAME')}/{image_name}:latest"
+    docker_tag = f"{get_env_var('DOCKER_USERNAME')}/{get_env_var('IMAGE_NAME')}:latest"
     print("Tagging docker image...")
-    subprocess.run(["docker", "tag", image_name, docker_tag])
+    subprocess.run(["docker", "tag", get_env_var('IMAGE_NAME'), docker_tag])
     print(f"Tagged docker image: {docker_tag}")
 
 
@@ -71,7 +69,7 @@ def dockerpush(c):
     :return:
     """
     dockerlogin(c)
-    docker_tag = f"{get_env_var('DOCKER_USERNAME')}/{image_name}:latest"
+    docker_tag = f"{get_env_var('DOCKER_USERNAME')}/{get_env_var('IMAGE_NAME')}:latest"
     print("Pushing docker image to DockerHub...")
     subprocess.run(["docker", "push", docker_tag])
 
@@ -108,7 +106,7 @@ def dockerpull(c):
     :return:
     """
     print("Pulling docker image from DockerHub...")
-    full_tag = f"{get_env_var('DOCKER_USERNAME')}/{image_name}:latest"
+    full_tag = f"{get_env_var('DOCKER_USERNAME')}/{get_env_var('IMAGE_NAME')}:latest"
     subprocess.run(["docker", "pull", full_tag])
     print(f"Pulled docker image: {full_tag}")
 
@@ -122,13 +120,14 @@ def gcrdeploy(c):
     print("Deploying docker image to Google Cloud Run...")
     tag = 'latest'
     docker_username = get_env_var('DOCKER_USERNAME')
+    image_name = get_env_var('IMAGE_NAME')
     docker_tag = f'docker.io/{docker_username}/{image_name}:{tag}'
     envtoyaml(c)
     command = [
         'gcloud',
         'run',
         'deploy',
-        image_name,
+        get_env_var('IMAGE_NAME'),
         '--image',
         docker_tag,
         '--region',
