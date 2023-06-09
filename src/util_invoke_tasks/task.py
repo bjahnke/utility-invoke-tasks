@@ -184,8 +184,8 @@ def buildenvpy(c):
     """
     with open('.env', 'r') as f:
         lines = f.readlines()
-    pathlib.Path('../env').mkdir(parents=True, exist_ok=True)
-    with open('../env/env_auto.py', 'w') as f:
+    pathlib.Path('env').mkdir(parents=True, exist_ok=True)
+    with open('env/env_auto.py', 'w') as f:
         f.write(
             '"""\n'
             'Desc:\n'
