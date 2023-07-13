@@ -214,3 +214,14 @@ def dockerrun(c):
     """
     print("Running docker image...")
     subprocess.run(["docker", "run", "--env-file", ".env", get_env_var('IMAGE_NAME')])
+
+
+@task
+def cookiecutter(c):
+    """
+    run cookiecutter to create a new project
+    :param c:
+    :return:
+    """
+    print("Running cookiecutter...")
+    subprocess.run(["cookiecutter", "https://github.com/bjahnke/cookiecutter-python.git"])
