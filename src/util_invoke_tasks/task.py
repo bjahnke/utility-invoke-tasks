@@ -224,4 +224,12 @@ def cookiecutter(c):
     :return:
     """
     print("Running cookiecutter...")
-    subprocess.run(["cookiecutter", "https://github.com/bjahnke/cookiecutter-python.git"])
+    project_name = get_env_var('PROJECT_NAME')
+    package_name = get_env_var('PACKAGE_NAME')
+    subprocess.run([
+        "cookiecutter",
+        "https://github.com/bjahnke/cookiecutter-python.git",
+        "--no-input"
+        f"project_name={project_name}",
+        f"package_name={package_name}"
+    ])
