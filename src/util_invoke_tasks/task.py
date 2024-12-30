@@ -3,6 +3,7 @@ from invoke import task
 import subprocess
 import yaml
 import os
+import json
 
 
 def get_env_var(env_var):
@@ -13,8 +14,52 @@ def get_env_var(env_var):
     """
     var = os.environ.get(env_var)
     if not var:
-        raise ValueError(f"Environment variable {env_var} not found")
+        var = input(f"Environment variable {env_var} not found. Please provide a value: ")
+        os.environ[env_var] = var
+        update_env_yaml(env_var, var)
+        update_env_descriptions(env_var)
     return var
+
+
+def update_env_yaml(env_var, value):
+    """
+    Update environment.yaml file with the new environment variable
+    :param env_var:
+    :param value:
+    :return:
+    """
+    yaml_file = './environment.yaml'
+    if os.path.exists(yaml_file):
+        with open(yaml_file, 'r') as file:
+            env_dict = yaml.safe_load(file) or {}
+    else:
+        env_dict = {}
+
+    env_dict[env_var] = value
+
+    with open(yaml_file, 'w') as file:
+        yaml.dump(env_dict, file)
+
+
+def update_env_descriptions(env_var):
+    """
+    Update the descriptions of environment variables in a JSON file
+    :param env_var:
+    :return:
+    """
+    descriptions_file = './env_descriptions.json'
+    if os.path.exists(descriptions_file):
+        with open(descriptions_file, 'r') as file:
+            descriptions = json.load(file)
+    else:
+        descriptions = {}
+
+    if env_var not in descriptions:
+        description = input(f"Please provide a description for the environment variable {env_var}: ")
+        descriptions[env_var] = description
+
+        with open(descriptions_file, 'w') as file:
+            json.dump(descriptions, file, indent=4)
 
 
 @task
