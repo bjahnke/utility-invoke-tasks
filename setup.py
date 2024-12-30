@@ -9,5 +9,5 @@ setup(
     author='bjahnke',
     author_email='bjahnke71@gmail.com',
     description='portable utiltity tasks',
-    install_requires=['invoke']
+    install_requires=['invoke', 'pyyaml']
 )
